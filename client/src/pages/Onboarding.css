@@ -1,0 +1,66 @@
+.onboarding {
+  border-top: solid 1px rgb(213, 213, 213);
+}
+
+.onboarding form {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+.onboarding form input {
+  padding: 0.9375rem 1.875rem;
+  margin: 0.625rem 0;
+  font-size: 0.9375rem;
+  border: solid 0.125rem rgb(219, 219, 219);
+  border-radius: 0.625rem;
+}
+.onboarding form input::-webkit-outer-spin-button,
+.onboarding form input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.onboarding form input[type=radio] {
+  display: none;
+}
+.onboarding form input[type=radio]:checked + label {
+  border: solid 2px rgb(221, 39, 22);
+}
+.onboarding form input[type=number] {
+  width: 10%;
+}
+.onboarding form input[type=submit]:hover {
+  background-color: rgb(235, 235, 235);
+}
+.onboarding form input[type=submit]:active {
+  background-color: rgb(226, 115, 155);
+}
+.onboarding form label {
+  margin: 0.625rem 0;
+}
+
+.onboarding section {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  width: 35%;
+  text-align: start;
+}
+
+.multiple-input-container {
+  display: flex;
+  flex-direction: row;
+}
+.multiple-input-container input {
+  margin-right: 10px;
+}
+.multiple-input-container label {
+  padding: 10px;
+  border: solid 2px rgb(144, 144, 144);
+  border-radius: 10px;
+  transition: all 0.3s;
+  margin-right: 10px;
+}
+
+.photo-container img {
+  width: 100%;
+}/*# sourceMappingURL=Onboarding.css.map */

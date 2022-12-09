@@ -1,0 +1,77 @@
+.dashboard {
+  display:flex;
+  justify-content: space-between;
+}
+
+.swipe-container {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh
+}
+
+.swipe {
+  position: absolute;
+}
+
+.card-container {
+  width: 25rem;
+  height: 40.625rem;
+}
+
+.card {
+  background-color: #fff;
+  width: 25rem;
+  height: 40.625rem;
+  // box-shadow: 0rem 0rem 3.75rem 0rem rgba(0,0,0,0.30);
+  border-radius: 1.875rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.card h3 {
+  position: absolute;
+  bottom: 0;
+  margin: 1.25rem;
+  color: #fff;
+}
+
+.swipe-info {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  // color: #fff;
+  animation-name: popup;
+  animation-duration: 800ms;
+}
+
+.buttons {
+  margin: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  & button {
+    flex-shrink: 0;
+    padding: 0.625rem;
+    border-radius: 0.3125rem;
+    border: none;
+    color: #fff;
+    font-size: 1.125rem;
+    background-color: #9198e5;
+    transition: 200ms;
+    margin: 0.625rem;
+    font-weight: bolder;
+    width: 10rem;
+    box-shadow: 0rem 0rem 1.875rem 0rem rgba(0,0,0,0.10);
+  }
+  & button:hover {
+    transform: scale(1.05);
+  }
+}
+
+@media (max-width: 625px) {
+  .buttons {
+    flex-direction: column;
+  }
+}
