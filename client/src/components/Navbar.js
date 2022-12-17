@@ -3,10 +3,10 @@ import colorLogo from "../assets/Images/bark_logo.PNG";
 import whiteLogo from "../assets/Images/bark_logo_paw2.png";
 import "../components/Navbar.scss";
 
-function Navbar({ minimal, setShowModal, showModal, setIsCreateAccount }) {
+function Navbar({ minimal, setShowModal, showModal, setIsSignedUp }) {
   const handleClick = () => {
     setShowModal(true);
-    setIsCreateAccount(false)
+    setIsSignedUp(true)
   };
 
   const authToken = false;
