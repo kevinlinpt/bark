@@ -1,1 +1,66 @@
-// Same formatting as dog onboarding page
+.onboarding {
+  border-top: solid 1px rgb(213, 213, 213);
+}
+
+.onboarding form {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  & input {
+    padding: 0.9375rem 1.875rem;
+    margin: 0.625rem 0;
+    font-size: 0.9375rem;
+    border: solid 0.125rem rgb(219, 219, 219);
+    border-radius: 0.625rem;
+  }
+  & input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  & input[type="radio"] {
+    display: none;
+  }
+  & input[type="radio"]:checked + label {
+    border: solid 2px rgb(221, 39, 22);
+  }
+  & input[type="number"] {
+    width: 10%;
+  }
+  & input[type="submit"]:hover {
+    background-color: rgb(235, 235, 235);
+  }
+  & input[type="submit"]:active {
+    background-color: rgb(226, 115, 155);
+  }
+  & label {
+    margin: 0.625rem 0;
+  }
+}
+
+.onboarding section {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  width: 35%;
+  text-align: start;
+}
+
+.multiple-input-container {
+  display: flex;
+  flex-direction: row;
+  & input {
+    margin-right: 10px;
+  }
+  & label {
+    padding: 10px;
+    border: solid 2px rgb(144, 144, 144);
+    border-radius: 10px;
+    transition: all 0.3s;
+    margin-right: 10px;
+  }
+}
+
+.photo-container img {
+  width: 100%;
+}

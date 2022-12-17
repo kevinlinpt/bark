@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie"
 import "./AuthModal.scss";
 
 const baseUrl = "http://localhost:8080";
@@ -12,8 +13,9 @@ function AuthModal({ setShowModal, isSignedUp }) {
   const [password, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
   const [error, setError] = useState(null);
+  const [cookies, setCookie, removeCookie] = useCookies('user');
 
-  let navigate = useNavigate;
+  const navigate = useNavigate();
 
   const handleClick = () => {
     setShowModal(false);
@@ -22,24 +24,32 @@ function AuthModal({ setShowModal, isSignedUp }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!isSignedUp && password != confirmPassword) {
+      if (!isSignedUp && password !== confirmPassword) {
         setError("The passwords do not match");
         return;
       }
 
-      // send signup info to backend
+      // send signup/login info to backend
       await axios
-        .post(signupUrl, {
+        .post(!isSignedUp ? signupUrl : loginUrl, {
           email,
           password,
         })
         .then((res) => {
-          console.log(res);
-          const success = res.status === 201;
+          // save user id and token as cookies on website
+          setCookie('UserId', res.data.userId)
+          setCookie('AuthToken', res.data.token)
 
-          // if sign-up is successful
-          if (success) {
+          // success if status 201 is sent from backend
+          const success = res.status === 201; 
+
+          // if sign-up is successful, navigate to onboarding page
+          if (success && !isSignedUp) {
             navigate("/onboarding/users");
+          }
+          // if login is successful, navigate to dashboard page
+          if (success && isSignedUp) {
+            navigate("/dashboard");
           }
         });
     } catch (error) {
@@ -66,7 +76,7 @@ function AuthModal({ setShowModal, isSignedUp }) {
           name="email"
           placeholder="email"
           required={true}
-          onChange={(e) => setEmail(e.target.value)} 
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"

@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./OnboardingUsers.scss";
 
 function Onboarding() {
+  const [cookies, setCookie, removeCookie] = useCookies("users");
   const [formData, setFormData] = useState({
-    user_id: "",
+    user_id: cookies.UserId, // use cookie from signup to fill in user id
     first_name: "",
     dob_day: "",
     dob_month: "",
@@ -16,9 +20,25 @@ function Onboarding() {
     matches: [],
   });
 
-  const handleSubmit = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     console.log("submitted");
+    e.preventDefault();
+
+    // submit user data
+    try {
+      await axios
+        .put("http://localhost:8080/user", { formData })
+        .then((res) => {
+          const success = res.status === 200;
+          if (success) navigate("/dashboard");
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
+ 
 
   const handleChange = (e) => {
     const value =
@@ -123,7 +143,7 @@ function Onboarding() {
                 checked={formData.show_gender}
               />
             </div>
-          
+
             <label htmlFor="about_me">About Me</label>
             <input
               id="about_me"
@@ -147,7 +167,9 @@ function Onboarding() {
               required={true}
             />
             <div className="photo-container">
-              <img src={formData.url_1} alt="profile pic preview"></img>
+              {formData.url_1 && (
+                <img src={formData.url_1} alt="profile pic preview"></img>
+              )}
             </div>
           </section>
         </form>
