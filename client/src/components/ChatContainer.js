@@ -4,10 +4,10 @@ import MatchesDisplay from "./MatchesDisplay"
 import ChatDisplay from "./ChatDisplay"
 import "./ChatContainer.scss"
 
-function ChatContainer() {
+function ChatContainer({user}) {
   return (
     <div className="chat-container">
-      <ChatHeader/>
+      <ChatHeader user={user}/>
 
       <button className="option">Matches</button>
       <button className="option">Chat</button>

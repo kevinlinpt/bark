@@ -6,7 +6,7 @@
 // import "./OnboardingDogs.scss";
 
 // function Onboarding() {
-//   // const [cookies, setCookie, removeCookie] = useCookies('dogs');
+//   // const [cookies, setCookie, removeCookie] = useCookies(['dogs']);
 //   const [formData, setFormData] = useState({
 //     user_id: "",
 //     name: "",

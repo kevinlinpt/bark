@@ -87,7 +87,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// retrieve data for all users
+// retrieve data for all users from db
 app.get("/users", async (req, res) => {
   const client = new MongoClient(uri);
 
@@ -108,7 +108,28 @@ app.get("/users", async (req, res) => {
   }
 });
 
-// retrieve data for all dogs
+// retrieve data for one user from db 
+app.get("/user", async (req, res) => {
+  const client = new MongoClient(uri)
+  const userId = req.query.userId
+
+  console.log('userid', userId)
+
+  try {
+    await client.connect();
+    const database = client.db("app-data");
+    const users = database.collection("users")
+
+    // query user based on userId and find user in database
+    const query = { user_id: userId}
+    const user = await users.findOne(query)
+    res.send(user)
+  } finally {
+    await client.close()
+  }
+})
+
+// retrieve data for all dogs from db
 app.get("/dogs", async (req, res) => {
   const client = new MongoClient(uri);
 

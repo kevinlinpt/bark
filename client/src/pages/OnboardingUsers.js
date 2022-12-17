@@ -6,7 +6,7 @@ import axios from "axios";
 import "./OnboardingUsers.scss";
 
 function Onboarding() {
-  const [cookies, setCookie, removeCookie] = useCookies("users");
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const [formData, setFormData] = useState({
     user_id: cookies.UserId, // use cookie from signup to fill in user id
     first_name: "",
