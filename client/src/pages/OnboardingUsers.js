@@ -15,6 +15,7 @@ function Onboarding() {
     dob_year: "",
     show_gender: false,
     gender: "male",
+    gender_interest: "female",
     url_1: "",
     about_me: "",
     matches: [],
@@ -38,7 +39,6 @@ function Onboarding() {
       console.log(error);
     }
   };
- 
 
   const handleChange = (e) => {
     const value =
@@ -142,6 +142,38 @@ function Onboarding() {
                 onChange={handleChange}
                 checked={formData.show_gender}
               />
+            </div>
+
+            <label>Show Me</label>
+
+            <div className="multiple-input-container">
+              <input
+                id="male-gender-interest"
+                type="radio"
+                name="gender_interest"
+                value="male"
+                onChange={handleChange}
+                checked={formData.gender_interest === "male"}
+              />
+              <label htmlFor="male-gender-interest">Male</label>
+              <input
+                id="female-gender-interest"
+                type="radio"
+                name="gender_interest"
+                value="female"
+                onChange={handleChange}
+                checked={formData.gender_interest === "female"}
+              />
+              <label htmlFor="female-gender-interest">Female</label>
+              <input
+                id="everyone-gender-interest"
+                type="radio"
+                name="gender_interest"
+                value="everyone"
+                onChange={handleChange}
+                checked={formData.gender_interest === "everyone"}
+              />
+              <label htmlFor="everyone-gender-interest">Everyone</label>
             </div>
 
             <label htmlFor="about_me">About Me</label>

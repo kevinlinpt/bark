@@ -88,46 +88,73 @@ app.post("/login", async (req, res) => {
 });
 
 // retrieve data for all users from db
-app.get("/users", async (req, res) => {
+app.get('/users', async (req, res) => {
+  const client = new MongoClient(uri)
+  const userIds = JSON.parse(req.query.userIds)
+
+  try {
+      await client.connect()
+      const database = client.db('app-data')
+      const users = database.collection('users')
+
+      const pipeline =
+          [
+              {
+                  '$match': {
+                      'user_id': {
+                          '$in': userIds
+                      }
+                  }
+              }
+          ]
+
+      const foundUsers = await users.aggregate(pipeline).toArray()
+
+      res.json(foundUsers)
+
+  } finally {
+      await client.close()
+  }
+})
+
+// get users by gender
+app.get('/gendered-users', async (req, res) => {
+  const client = new MongoClient(uri)
+  const gender_identity = req.query.gender
+
+  try {
+      await client.connect()
+      const database = client.db('app-data')
+      const users = database.collection('users')
+      const query = {gender: {$eq: gender_identity}}
+      const foundUsers = await users.find(query).toArray()
+      res.json(foundUsers)
+
+  } finally {
+      await client.close()
+  }
+})
+
+// retrieve data for one user from db
+app.get("/user", async (req, res) => {
   const client = new MongoClient(uri);
+  const userId = req.query.userId;
+
+  console.log("userid", userId);
 
   try {
     await client.connect();
     const database = client.db("app-data");
     const users = database.collection("users");
 
-    // turn users obj to array
-    const returnedUsers = await users.find().toArray();
-    console.log(returnedUsers);
-    res.send(returnedUsers);
-  } catch (error) {
-    console.log(error);
+    // query user based on userId and find user in database
+    const query = { user_id: userId };
+    const user = await users.findOne(query);
+    res.send(user);
   } finally {
-    // run regardless of try result
     await client.close();
   }
 });
-
-// retrieve data for one user from db 
-app.get("/user", async (req, res) => {
-  const client = new MongoClient(uri)
-  const userId = req.query.userId
-
-  console.log('userid', userId)
-
-  try {
-    await client.connect();
-    const database = client.db("app-data");
-    const users = database.collection("users")
-
-    // query user based on userId and find user in database
-    const query = { user_id: userId}
-    const user = await users.findOne(query)
-    res.send(user)
-  } finally {
-    await client.close()
-  }
-})
 
 // retrieve data for all dogs from db
 app.get("/dogs", async (req, res) => {
@@ -172,13 +199,37 @@ app.put("/user", async (req, res) => {
         dob_year: formData.dob_year,
         show_gender: formData.show_gender,
         gender: formData.gender,
+        gender_interest: formData.gender_interest,
         url_1: formData.url_1,
         about_me: formData.about_me,
         matches: formData.matches,
       },
     };
     const insertedUser = await users.updateOne(query, updateDocument);
-    res.json(insertedUser)
+    res.json(insertedUser);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    await client.close();
+  }
+});
+
+// update user matches array with new matched user using matchedUserId
+app.put("/addmatch", async (req, res) => {
+  const client = new MongoClient(uri);
+  const { userId, matchedUserId } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db("app-data");
+    const users = database.collection("users");
+
+    const query = { user_id: userId };
+    const updateDocument = {
+      $push: { matches: { user_id: matchedUserId } },
+    };
+    const user = await users.updateOne(query, updateDocument);
+    res.send(user);
   } catch (error) {
     console.log(error);
   } finally {
