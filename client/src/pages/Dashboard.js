@@ -1,137 +1,114 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
 import TinderCard from "react-tinder-card";
 import ChatContainer from "../components/ChatContainer";
+import axios from "axios";
 import "./Dashboard.scss";
 
 function Dashboard() {
-  const characters = [
-    {
-      name: "Gohan",
-      url: "https://imgur.com/p2mewNT.jpg",
-    },
-    {
-      name: "Erlich Bachman",
-      url: "https://imgur.com/haG7f1j.jpg",
-    },
-    {
-      name: "Monica Hall",
-      url: "https://imgur.com/haG7f1j.jpg",
-    },
-    {
-      name: "Jared Dunn",
-      url: "https://imgur.com/haG7f1j.jpg",
-    },
-    {
-      name: "Loki",
-      url: "https://imgur.com/haG7f1j.jpg",
-    },
-  ];
+  const [user, setUser] = useState(null);
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+  const [genderedUsers, setGenderedUsers] = useState(null);
+  const [lastDirection, setLastDirection] = useState(); // swipe direction
 
-  const [currentIndex, setCurrentIndex] = useState(characters.length - 1);
-  const [lastDirection, setLastDirection] = useState();
-  // used for outOfFrame closure
-  const currentIndexRef = useRef(currentIndex);
+  const userId = cookies.UserId;
 
-  const childRefs = useMemo(
-    () =>
-      Array(characters.length)
-        .fill(0)
-        .map((i) => React.createRef()),
-    []
-  );
-
-  const updateCurrentIndex = (val) => {
-    setCurrentIndex(val);
-    currentIndexRef.current = val;
-  };
-
-  const canGoBack = currentIndex < characters.length - 1;
-
-  const canSwipe = currentIndex >= 0;
-
-  // set last direction and decrease current index
-  const swiped = (direction, nameToDelete, index) => {
-    setLastDirection(direction);
-    updateCurrentIndex(index - 1);
-  };
-
-  const outOfFrame = (name, idx) => {
-    console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current);
-    // handle the case in which go back is pressed before card goes outOfFrame
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard();
-    // TODO: when quickly swipe and restore multiple times the same card,
-    // it happens multiple outOfFrame events are queued and the card disappear
-    // during latest swipes. Only the last outOfFrame event should be considered valid
-  };
-
-  const swipe = async (dir) => {
-    if (canSwipe && currentIndex < characters.length) {
-      await childRefs[currentIndex].current.swipe(dir); // Swipe the card!
+  // sends get request to backend and save response into 'user' variable
+  const getUser = async () => {
+    try {
+      await axios
+        .get("http://localhost:8080/user", { params: { userId } })
+        .then((res) => {
+          setUser(res.data);
+        });
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  // increase current index and show card
-  const goBack = async () => {
-    if (!canGoBack) return;
-    const newIndex = currentIndex + 1;
-    updateCurrentIndex(newIndex);
-    await childRefs[newIndex].current.restoreCard();
+  const getGenderedUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/gendered-users", {
+        params: { gender: user?.gender_interest },
+      });
+      setGenderedUsers(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      getGenderedUsers();
+    }
+  }, [user]);
+
+  const updateMatches = async (matchedUserId) => {
+    try {
+      await axios.put("http://localhost:8080/addmatch", {
+        userId,
+        matchedUserId,
+      });
+      getUser();
+    } catch (error) {
+      console.log(error);
+    }
+  }; 
+
+  const swiped = (direction, swipedUserId) => {
+    if (direction === "right") {
+      updateMatches(swipedUserId);
+    }
+    setLastDirection(direction);
+  };
+
+  const outOfFrame = (name) => {
+    console.log(name + " left the screen!");
+  };
+
+  const matchedUserIds = user?.matches
+    .map(({ user_id }) => user_id)
+    .concat(userId);
+
+  const filteredGenderedUsers = genderedUsers?.filter(
+    (genderedUser) => !matchedUserIds.includes(genderedUser.user_id)
+  );
+
+  console.log("filteredGenderedUsers ", filteredGenderedUsers);
   return (
-    <div className="dashboard">
-      <ChatContainer />
-      <div className="swipe-container">
-        <div className="card-container">
-          {characters.map((character, index) => (
-            <TinderCard
-              ref={childRefs[index]}
-              className="swipe"
-              key={character.name}
-              onSwipe={(dir) => swiped(dir, character.name, index)}
-              onCardLeftScreen={() => outOfFrame(character.name, index)}
-            >
-              <div
-                style={{ backgroundImage: "url(" + character.url + ")" }}
-                className="card"
-              >
-                <h3>{character.name}</h3>
+    <>
+      {user && (
+        <div className="dashboard">
+          <ChatContainer user={user} />
+          <div className="swipe-container">
+            <div className="card-container">
+              {genderedUsers?.map((genderedUser) => (
+                <TinderCard
+                  className="swipe"
+                  key={genderedUser.user_id}
+                  onSwipe={(dir) => swiped(dir, genderedUser.user_id)}
+                  onCardLeftScreen={() => outOfFrame(genderedUser.first_name)}
+                >
+                  <div
+                    style={{ backgroundImage: "url(" + genderedUser.url_1 + ")" }}
+                    className="card"
+                  >
+                    <h3>{genderedUser.first_name}</h3>
+                  </div>
+                </TinderCard>
+              ))}
+              <div className="swipe-info">
+                {lastDirection ? <p>You swiped {lastDirection}</p> : <p />}
               </div>
-            </TinderCard>
-          ))}
+            </div>
+          </div>
         </div>
-        <div className="buttons">
-          <button
-            style={{ backgroundColor: !canSwipe && "#c3c4d3" }}
-            onClick={() => swipe("left")}
-          >
-            Swipe left!
-          </button>
-          <button
-            style={{ backgroundColor: !canGoBack && "#c3c4d3" }}
-            onClick={() => goBack()}
-          >
-            Undo swipe!
-          </button>
-          <button
-            style={{ backgroundColor: !canSwipe && "#c3c4d3" }}
-            onClick={() => swipe("right")}
-          >
-            Swipe right!
-          </button>
-        </div>
-        {lastDirection ? (
-          <h2 key={lastDirection} className="swipe-info">
-            You swiped {lastDirection}
-          </h2>
-        ) : (
-          <h2 className="swipe-info">
-            Swipe right to match!
-          </h2>
-        )}
-      </div>
-    </div>
+      )}
+    </>
   );
 }
-
 export default Dashboard;

@@ -1,21 +1,21 @@
-import React from 'react'
-import ChatHeader from './ChatHeader'
-import MatchesDisplay from "./MatchesDisplay"
-import ChatDisplay from "./ChatDisplay"
-import "./ChatContainer.scss"
+import React from "react";
+import ChatHeader from "./ChatHeader";
+import MatchesDisplay from "./MatchesDisplay";
+import ChatDisplay from "./ChatDisplay";
+import "./ChatContainer.scss";
 
-function ChatContainer() {
+function ChatContainer({ user }) {
   return (
     <div className="chat-container">
-      <ChatHeader/>
+      <ChatHeader user={user} />
 
       <button className="option">Matches</button>
       <button className="option">Chat</button>
 
-      <MatchesDisplay/>
-      <ChatDisplay/>
+      <MatchesDisplay matches={user.matches} />
+      <ChatDisplay />
     </div>
-  )
+  );
 }
 
-export default ChatContainer
+export default ChatContainer;
