@@ -4,6 +4,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  &__name {
+    margin-left: 0.5rem;
+  }
 }
 
 .profile,
@@ -19,8 +22,9 @@
   width: 1.875rem;
   border-radius: 0.9375rem;
   overflow: hidden;
-  margin: 0.625rem;
+  margin: 0.625rem 0 0.625rem 0;
   & img {
     width: 100%;
+    height: 100%;
   }
 }

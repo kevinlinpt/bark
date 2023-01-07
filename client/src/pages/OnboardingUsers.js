@@ -24,7 +24,6 @@ function Onboarding() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    console.log("submitted");
     e.preventDefault();
 
     // submit user data

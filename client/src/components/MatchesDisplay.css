@@ -1,1 +1,30 @@
-/*# sourceMappingURL=MatchesDisplay.css.map */
+.matches-display {
+  padding: 1.25rem;
+  height: 60vh;
+  overflow-y: auto;
+}
+
+.match-card {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.matched-img-container {
+  height: 7.875rem;
+  width: 6.875rem;
+  border-radius: 0.9375rem;
+  overflow: hidden;
+  margin: 0.625rem 0 0.625rem 0;
+}
+.matched-img-container img {
+  width: 100%;
+  height: 100%;
+}
+
+.matched-username {
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
+  margin: 0;
+}/*# sourceMappingURL=MatchesDisplay.css.map */

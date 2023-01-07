@@ -5,6 +5,9 @@
   justify-content: space-between;
   align-items: center;
 }
+.chat-container-header__name {
+  margin-left: 0.5rem;
+}
 
 .profile,
 .log-out-icon {
@@ -19,8 +22,9 @@
   width: 1.875rem;
   border-radius: 0.9375rem;
   overflow: hidden;
-  margin: 0.625rem;
+  margin: 0.625rem 0 0.625rem 0;
 }
 .img-container img {
   width: 100%;
+  height: 100%;
 }/*# sourceMappingURL=ChatHeader.css.map */

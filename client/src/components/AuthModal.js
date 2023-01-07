@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -51,7 +51,7 @@ function AuthModal({ setShowModal, isSignedUp }) {
           if (success && isSignedUp) {
             navigate("/dashboard");
           }
-          window.location.reload()
+          window.location.reload();
         });
     } catch (error) {
       console.log(error);
