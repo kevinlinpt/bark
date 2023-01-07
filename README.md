@@ -39,5 +39,5 @@ Back End:
 - MongoDB
 
 Libraries/Packages:
-- react-tinder-card, Moment.js, passport.js, cookies, jwt, bcrypt
+- react-tinder-card, moment.js, passport.js, cookies, jwt, bcrypt, uuid
 
