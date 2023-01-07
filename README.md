@@ -1,6 +1,6 @@
 # bark-app
 
-## This is a full-stack web app for dog owners to find their dogs a soul mate, best friend, or just meet new people! Personal passion project built by Kevin Lin
+## This is a full-stack web app for dog owners to find their dogs a soul mate, best friend, or just meet new people! 
 
 ### Running App
 - Must run all three of below:
