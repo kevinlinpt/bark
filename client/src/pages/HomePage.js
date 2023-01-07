@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import Navbar from "../components/Navbar";
 import AuthModal from "../components/AuthModal";
+import Footer from "../components/Footer";
 import "./HomePage.scss";
 
 function HomePage() {
@@ -42,6 +43,7 @@ function HomePage() {
           <AuthModal setShowModal={setShowModal} isSignedUp={isSignedUp} />
         )}
       </div>
+      <Footer/>
     </div>
   );
 }
